@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    
+    <title>Multi Sig Wallet</title>
+</head>
+<body>
+    
+    <button class="tablink" id="submit-tab" onclick="openPage('Home', this)">Submit</button>
+    <button class="tablink" id="pending-tab" onclick="openPage('News', this)" id="defaultOpen">Pending</button>
+    <button class="tablink" id="history_tab" onclick="openPage('Contact', this)">History</button>
+
+    <div id="Home" class="tabcontent">
+        <div class="connected">
+            <h2><p class="connected-text">Submit A Transaction</p></h2>
+        </div>
+        <div class="form-div">
+            <form>
+              <input placeholder="To" required="" type="text" />
+              <p></p>
+              <input name="value" placeholder="Value" type="text" />
+              <p></p>
+              <input name="data" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Data" type="text" />
+              <p></p>
+              <button type="button" class="form-button">SUBMIT</button>
+            </form>
+        </div>
+        <div class="connected">
+            <p class="connected-text">
+                <b>Connected To:</b>
+                <br>
+                0x5bb2BC3165302808C069B46B085e56172634E118
+            </p>
+        </div>
+    </div>
+      
+    <div id="News" class="tabcontent">
+        <h3>News</h3>
+        <p>Some news this fine day!</p> 
+    </div>
+      
+    <div id="Contact" class="tabcontent">
+        <h3>Contact</h3>
+        <p>Get in touch, or swing by for a cup of coffee.</p>
+    </div>
+      
+    <div id="About" class="tabcontent">
+        <h3>About</h3>
+        <p>Who we are and what we do.</p>
+    </div>
+
+    <script src="js/initial.js"></script>
+</body>
+</html>

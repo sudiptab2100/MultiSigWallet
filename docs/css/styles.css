@@ -1,0 +1,126 @@
+* {box-sizing: border-box}
+
+/* Style tab links */
+.tablink {
+    background-color: #845460;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 17px;
+    width: 33.3333%;
+}
+
+.tablink:hover {
+    background-color: #bdc7c9;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+    color: white;
+    display: none;
+    padding: 100px 20px;
+    height: 100%;
+}
+
+#Home, #News, #Contact, #About {
+    background-color: #2b4f60;
+    height: auto;
+}
+
+h3, .tablink, input, body { 
+    font-family: 'Indie Flower', cursive;
+    letter-spacing: 2px;
+    font-size: large;
+}
+
+body {
+  background-color: #2b4f60;
+  margin: 0;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-items: center;
+}
+
+.form-div {
+  background: #bdc7c9;
+  padding: 50px 20px;
+  border: 2px solid black;
+  box-shadow: 15px 15px 1px #845460, 15px 15px 1px 2px black;
+  margin: 0% 25%;
+}
+
+input {
+  display: block;
+  width: 100%;
+  font-size: 14pt;
+  line-height: 28pt;
+  margin-bottom: 10pt;
+  border: none;
+  border-bottom: 2px solid black;
+  background: #bdc7c9;
+  min-width: 100%;
+  padding-left: 5px;
+  outline: none;
+  color: black;
+}
+
+.connected {
+    background: #bdc7c9;
+    padding: 0px 5px;
+    border: 2px solid black;
+    box-shadow: 15px 15px 1px #845460, 15px 15px 1px 2px black;
+    margin: 0% 25%;
+    text-align: center;
+}
+
+.connected-text {
+    display: block;
+    width: 100%;
+    font-size: 14pt;
+    border: none;
+    background: #bdc7c9;
+    min-width: 100%;
+    outline: none;
+    color: black;
+    word-wrap: break-word;
+}
+
+input:focus {
+  border-bottom: 2px solid #845460;
+}
+
+.form-button {
+  display: block;
+  margin: 0 auto;
+  line-height: 250%;
+  padding: 0 20px;
+  background: #845460;
+  letter-spacing: 2px;
+  transition: 0.2s all ease-in-out;
+  outline: none;
+  border: 1px solid black;
+  box-shadow: 3px 3px 1px #2b4f60, 3px 3px 1px 1px black;
+}
+.form-button:hover {
+  background: black;
+  color: white;
+  border: 1px solid black;
+}
+
+::selection {
+  background: #2b4f60;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  border-bottom: 2px solid #845460;
+  -webkit-text-fill-color: #2A293E;
+  -webkit-box-shadow: 0 0 0px 1000px #bdc7c9 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
