@@ -1,8 +1,8 @@
 BSC Testnet
-0xa738F5c86AC19a87FFA1ba139a2d6a52fD064c13
+0x5A5daca766DA95b9d91eB24eD5CF979FA46d1595
 
-https://testnet.bscscan.com/address/0xa738F5c86AC19a87FFA1ba139a2d6a52fD064c13
+https://testnet.bscscan.com/address/0x5A5daca766DA95b9d91eB24eD5CF979FA46d1595
 
 
 Verify Contract From Truffle
-truffle run verify ContractName@{contract-address} --network testnet
+truffle run verify MultiSigWallet@0x5A5daca766DA95b9d91eB24eD5CF979FA46d1595 --network testnet

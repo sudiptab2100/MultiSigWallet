@@ -95,6 +95,10 @@ contract MultiSigWallet {
         return status;
     }
 
+    function notRespondedYet(uint _txIndex) external view returns(bool) {
+        return responded[_txIndex][msg.sender];
+    }
+
     function submitTransaction(address _to, uint _value, bytes memory _data)
         public
         onlyOwner
