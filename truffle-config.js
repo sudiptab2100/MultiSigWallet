@@ -24,6 +24,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 //
 const fs = require('fs');
 const mnemonic = fs.readFileSync(".secret").toString().trim();
+const bscscanApi = fs.readFileSync(".bscscan_api").toString().trim();
 
 module.exports = {
   /**
@@ -35,6 +36,13 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+
+  plugins: [
+    'truffle-plugin-verify'
+  ],
+  api_keys: {
+    bscscan: bscscanApi
+  },
 
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default

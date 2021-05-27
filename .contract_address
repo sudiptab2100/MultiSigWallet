@@ -1,0 +1,8 @@
+BSC Testnet
+0xa738F5c86AC19a87FFA1ba139a2d6a52fD064c13
+
+https://testnet.bscscan.com/address/0xa738F5c86AC19a87FFA1ba139a2d6a52fD064c13
+
+
+Verify Contract From Truffle
+truffle run verify ContractName@{contract-address} --network testnet

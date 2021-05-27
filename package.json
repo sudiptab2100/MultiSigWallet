@@ -15,7 +15,8 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.3.4",
-    "chai-as-promised": "^7.1.1"
+    "chai-as-promised": "^7.1.1",
+    "truffle-plugin-verify": "^0.5.8"
   },
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.4.0",
