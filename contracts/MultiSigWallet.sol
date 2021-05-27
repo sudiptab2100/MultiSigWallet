@@ -10,8 +10,8 @@ contract MultiSigWallet {
         uint value,
         bytes data
     );
-    event ConfirmTransaction(address indexed owner, uint indexed txIndex);
-    event RevokeConfirmation(address indexed owner, uint indexed txIndex);
+    event ApproveTransaction(address indexed owner, uint indexed txIndex);
+    event RejectTransaction(address indexed owner, uint indexed txIndex);
     event ExecuteTransaction(address indexed owner, uint indexed txIndex);
 
     address[] public owners;
@@ -23,11 +23,17 @@ contract MultiSigWallet {
         uint value;
         bytes data;
         bool executed;
-        uint numConfirmations;
+        uint numApprovals;
+        uint numRejections;
     }
 
     // mapping from tx index => owner => bool
-    mapping(uint => mapping(address => bool)) public isConfirmed;
+    mapping(uint => mapping(address => bool)) private responded;
+
+    mapping(uint => bool) public isApproved;
+    mapping(uint => bool) public isRejected;
+
+    uint public lastTx;
 
     Transaction[] public transactions;
 
@@ -41,13 +47,19 @@ contract MultiSigWallet {
         _;
     }
 
+    modifier canSubmit() {
+        require(noPendingTx(), "a tx is pending");
+        _;
+    }
+
     modifier notExecuted(uint _txIndex) {
         require(!transactions[_txIndex].executed, "tx already executed");
         _;
     }
 
-    modifier notConfirmed(uint _txIndex) {
-        require(!isConfirmed[_txIndex][msg.sender], "tx already confirmed");
+    modifier notResponded(uint _txIndex) {
+        require(!responded[_txIndex][msg.sender], "already responded to the tx");
+        responded[_txIndex][msg.sender] = true;
         _;
     }
 
@@ -69,41 +81,52 @@ contract MultiSigWallet {
         }
 
         numConfirmationsRequired = _numConfirmationsRequired;
+        lastTx = ~uint(0);
     }
 
     receive() payable external {
         emit Deposit(msg.sender, msg.value, address(this).balance);
     }
 
+    function noPendingTx() public view returns(bool) {
+        uint _txIndex = lastTx;
+        if(lastTx == ~uint(0)) return true;
+        bool status = (transactions[_txIndex].executed) || (isRejected[_txIndex]);
+        return status;
+    }
+
     function submitTransaction(address _to, uint _value, bytes memory _data)
         public
         onlyOwner
+        canSubmit
     {
         uint txIndex = transactions.length;
+        lastTx = txIndex;
 
         transactions.push(Transaction({
             to: _to,
             value: _value,
             data: _data,
             executed: false,
-            numConfirmations: 0
+            numApprovals: 0,
+            numRejections: 0
         }));
 
         emit SubmitTransaction(msg.sender, txIndex, _to, _value, _data);
     }
 
-    function confirmTransaction(uint _txIndex)
+    function approveTransaction(uint _txIndex)
         public
         onlyOwner
         txExists(_txIndex)
         notExecuted(_txIndex)
-        notConfirmed(_txIndex)
+        notResponded(_txIndex)
     {
         Transaction storage transaction = transactions[_txIndex];
-        transaction.numConfirmations += 1;
-        isConfirmed[_txIndex][msg.sender] = true;
+        transaction.numApprovals += 1;
+        if(transaction.numApprovals >= numConfirmationsRequired) isApproved[_txIndex] = true;
 
-        emit ConfirmTransaction(msg.sender, _txIndex);
+        emit ApproveTransaction(msg.sender, _txIndex);
     }
 
     function executeTransaction(uint _txIndex)
@@ -115,7 +138,7 @@ contract MultiSigWallet {
         Transaction storage transaction = transactions[_txIndex];
 
         require(
-            transaction.numConfirmations >= numConfirmationsRequired,
+            isApproved[_txIndex],
             "cannot execute tx"
         );
 
@@ -127,20 +150,19 @@ contract MultiSigWallet {
         emit ExecuteTransaction(msg.sender, _txIndex);
     }
 
-    function revokeConfirmation(uint _txIndex)
+    function rejectTransaction(uint _txIndex)
         public
         onlyOwner
         txExists(_txIndex)
         notExecuted(_txIndex)
+        notResponded(_txIndex)
     {
         Transaction storage transaction = transactions[_txIndex];
 
-        require(isConfirmed[_txIndex][msg.sender], "tx not confirmed");
+        transaction.numRejections += 1;
+        if(owners.length - transaction.numRejections < numConfirmationsRequired) isRejected[_txIndex] = true;
 
-        transaction.numConfirmations -= 1;
-        isConfirmed[_txIndex][msg.sender] = false;
-
-        emit RevokeConfirmation(msg.sender, _txIndex);
+        emit RejectTransaction(msg.sender, _txIndex);
     }
 
     function getOwners() public view returns (address[] memory) {
@@ -154,7 +176,7 @@ contract MultiSigWallet {
     function getTransaction(uint _txIndex)
         public
         view
-        returns (address to, uint value, bytes memory data, bool executed, uint numConfirmations)
+        returns (address to, uint value, bytes memory data, bool executed, uint numApprovals, uint numRejections)
     {
         Transaction storage transaction = transactions[_txIndex];
 
@@ -163,7 +185,8 @@ contract MultiSigWallet {
             transaction.value,
             transaction.data,
             transaction.executed,
-            transaction.numConfirmations
+            transaction.numApprovals,
+            transaction.numRejections
         );
     }
 }
